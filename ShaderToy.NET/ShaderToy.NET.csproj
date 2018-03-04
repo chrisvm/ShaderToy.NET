@@ -168,22 +168,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Textures\tex00.jpg" />
-    <Resource Include="Textures\tex01.jpg" />
-    <Resource Include="Textures\tex02.jpg" />
-    <Resource Include="Textures\tex03.jpg" />
-    <Resource Include="Textures\tex04.jpg" />
-    <Resource Include="Textures\tex05.jpg" />
-    <Resource Include="Textures\tex06.jpg" />
-    <Resource Include="Textures\tex07.jpg" />
-    <Resource Include="Textures\tex08.jpg" />
-    <Resource Include="Textures\tex09.jpg" />
-    <Resource Include="Textures\tex10.png" />
-    <Resource Include="Textures\tex11.png" />
-    <Resource Include="Textures\tex12.png" />
-    <Resource Include="Textures\tex14.png" />
-    <Resource Include="Textures\tex15.png" />
-    <Resource Include="Textures\tex16.png" />
+    <EmbeddedResource Include="Textures\tex00.jpg" />
+    <EmbeddedResource Include="Textures\tex01.jpg" />
+    <EmbeddedResource Include="Textures\tex02.jpg" />
+    <EmbeddedResource Include="Textures\tex03.jpg" />
+    <EmbeddedResource Include="Textures\tex04.jpg" />
+    <EmbeddedResource Include="Textures\tex05.jpg" />
+    <EmbeddedResource Include="Textures\tex06.jpg" />
+    <EmbeddedResource Include="Textures\tex07.jpg" />
+    <EmbeddedResource Include="Textures\tex08.jpg" />
+    <EmbeddedResource Include="Textures\tex09.jpg" />
+    <EmbeddedResource Include="Textures\tex10.png" />
+    <EmbeddedResource Include="Textures\tex11.png" />
+    <EmbeddedResource Include="Textures\tex12.png" />
+    <EmbeddedResource Include="Textures\tex14.png" />
+    <EmbeddedResource Include="Textures\tex15.png" />
+    <EmbeddedResource Include="Textures\tex16.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

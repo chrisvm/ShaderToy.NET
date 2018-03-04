@@ -22,10 +22,12 @@ namespace ShaderToy.NET
     {
         private readonly ShaderScene shaderScene;
         private readonly List<Shader> shaders = new List<Shader>();
+		private readonly List<string> textures = new List<string>(17);
         private readonly AudioPlayback aud = new AudioPlayback();
         private readonly Microphone mic;
         private readonly AudioBitmap audioBitmap = new AudioBitmap();
 
+	    private bool updateImageAfterGlLoad;
         private BitmapImage Ch0Image;
         private OpenGL gl;
         
@@ -40,26 +42,36 @@ namespace ShaderToy.NET
             aud.FftCalculated += OnFftCalculated;
             mic.FftCalculated += OnFftCalculated;
 
-            //Init Shaders
-            shaders.Add(new Shader("Waves", "waves_audio"));
-            shaders.Add(new Shader("Menger", "menger"));
-            shaders.Add(new Shader("Boxy", "boxy_audio"));
-            shaders.Add(new Shader("Waves Remix", "wave_remix_audio"));
-            shaders.Add(new Shader("Polar","polar_audio"));
-            shaders.Add(new Shader("Music Ball", "music_ball_audio"));
-            shaders.Add(new Shader("Cubescape","cubescape_audio"));
-            //shaders.Add(new Shader("QSA", "qsa"));
-            shaders.Add(new Shader("Sea", "sea"));
-            shaders.Add(new Shader("Mandelbrot", "mandelbrot"));
+	        shaders.Add(new Shader("Waves", "waves_audio"));
+	        shaders.Add(new Shader("Menger", "menger"));
+	        shaders.Add(new Shader("Boxy", "boxy_audio"));
+	        shaders.Add(new Shader("Waves Remix", "wave_remix_audio"));
+	        shaders.Add(new Shader("Polar", "polar_audio"));
+	        shaders.Add(new Shader("Music Ball", "music_ball_audio"));
+	        shaders.Add(new Shader("Cubescape", "cubescape_audio"));
+	        shaders.Add(new Shader("Sea", "sea"));
+	        shaders.Add(new Shader("Mandelbrot", "mandelbrot"));
 
-            shaderScene = new ShaderScene(shaders[0]);
-            shaderSelector.ItemsSource = shaders;
-            shaderSelector.SelectedIndex = 0;
+	        shaderScene = new ShaderScene(shaders[0]);
+			shaderSelector.ItemsSource = shaders;
+			shaderSelector.SelectedIndex = 0;
 
-            audioBitmap.OnBitmapUpdated += (s, a) => shaderScene.UpdateTextureBitmap(gl, 0, a.image);
+			InitTextures();
+
+			audioBitmap.OnBitmapUpdated += (s, a) => shaderScene.UpdateTextureBitmap(gl, 0, a.image);
         }
 
-       
+	    private void InitTextures()
+	    {
+		    var textureCount = 17;
+		    for (var index = 0; index < textureCount; index++) {
+			    var textureName = $"tex{index:00}.jpg";
+			    textures.Add(textureName);
+		    }
+
+		    textureSelector.ItemsSource = textures;
+		    textureSelector.SelectedIndex = 0;
+	    }
 
         private void OpenGLControl_OpenGLDraw(object sender, OpenGLEventArgs args)
         {
@@ -71,8 +83,10 @@ namespace ShaderToy.NET
             gl = args.OpenGL;
             shaderScene.Initialise(gl);
 
-            //init channel 0 (image)
-            UpdateChannel0(@"C:\sta.png");
+            // init channel 0 (image)
+	        if (updateImageAfterGlLoad) {
+				shaderScene.UpdateTextureBitmap(gl, 1, ImageHelper.BitmapImage2Bitmap(Ch0Image));
+			}
         }
 
         private void UpdateChannel0(string uriOfImage)
@@ -81,6 +95,18 @@ namespace ShaderToy.NET
             CHO_ImageBox.Source = Ch0Image;
             shaderScene.UpdateTextureBitmap(gl, 1, ImageHelper.BitmapImage2Bitmap(Ch0Image));
         }
+
+	    private void UpdateChannel0FromResource(string resourceName)
+	    {
+		    Ch0Image = ResourceHelper.LoadImageFromRecource(resourceName);
+		    CHO_ImageBox.Source = Ch0Image;
+
+		    if (gl == null) {
+			    updateImageAfterGlLoad = true;
+			    return;
+		    }
+		    shaderScene.UpdateTextureBitmap(gl, 1, ImageHelper.BitmapImage2Bitmap(Ch0Image));
+		}
         
         private void OnFftCalculated(object sender, FftEventArgs e)
         {
@@ -149,7 +175,8 @@ namespace ShaderToy.NET
 
 	    private void TextureSelector_OnSelectionChanged_SelectedChanged(object sender, SelectionChangedEventArgs e)
 	    {
-		    throw new NotImplementedException();
+		    var textureName = textures[textureSelector.SelectedIndex];
+			UpdateChannel0FromResource($"ShaderToy.NET.Textures.{textureName}");
 	    }
 
 		private void Start_Mic(object sender, RoutedEventArgs e)

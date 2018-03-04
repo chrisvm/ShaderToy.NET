@@ -62,7 +62,8 @@ namespace ShaderToy.NET
 
             //  Create the shader program.
             var vertexShaderSource = ResourceHelper.LoadTextFromRecource("ShaderToy.NET.Shaders.main.vert");
-            var fragmentShaderSource = ResourceHelper.LoadTextFromRecource("ShaderToy.NET.Shaders." + ActiveShader.ResourceName + ".frag");
+            var fragmentShaderSource = ResourceHelper.LoadTextFromRecource(
+	            $"ShaderToy.NET.Shaders.{ActiveShader.ResourceName}.frag");
             shaderProgram = new DynamicShaderProgram();
             shaderProgram.Create(gl, vertexShaderSource, fragmentShaderSource, null);
 

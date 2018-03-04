@@ -104,18 +104,6 @@
 
                         <ComboBox Name="textureSelector" Margin="5,0,0,0" SelectionChanged="TextureSelector_OnSelectionChanged_SelectedChanged"
                             HorizontalContentAlignment="Stretch" Width="136">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Name}" />
-                                        <Image Grid.Column="1" Source="Image/speaker.png" Stretch="None"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="{x:Type ComboBoxItem}">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

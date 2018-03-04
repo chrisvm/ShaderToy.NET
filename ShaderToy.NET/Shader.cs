@@ -7,13 +7,10 @@
         {
             this.Name = name;
             this.ResourceName = res;
-
         }
 
         public string Name { get; set; }
         public string ResourceName { get; set; }
-
         public bool soundEnabled { get; set; }
-
     } 
 }
