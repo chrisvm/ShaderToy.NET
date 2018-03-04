@@ -250,6 +250,8 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+ShaderToy.NET/obj/*
+ShaderToy.NET/bin/*
 
 # =========================
 # Operating System Files
