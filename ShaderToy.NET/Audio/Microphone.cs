@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using System.Windows.Controls;
 
 namespace ShaderToy.NET
 {

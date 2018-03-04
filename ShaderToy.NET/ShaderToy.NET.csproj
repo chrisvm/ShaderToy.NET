@@ -98,9 +98,9 @@
     </Compile>
     <Compile Include="BitmapUpdateEventArgs.cs" />
     <Compile Include="DynamicShaderProgram.cs" />
-    <Compile Include="ImageHelper.cs" />
-    <Compile Include="OptimusEnabler.cs" />
-    <Compile Include="ResourceHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\OptimusSupportHelper.cs" />
+    <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Audio\SampleAggregator.cs" />
     <Compile Include="Shader.cs" />
     <Compile Include="ShaderScene.cs" />

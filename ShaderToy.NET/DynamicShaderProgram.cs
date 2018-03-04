@@ -1,4 +1,5 @@
-﻿using SharpGL.Shaders;
+﻿using System;
+using SharpGL.Shaders;
 
 namespace ShaderToy.NET
 {
@@ -6,7 +7,7 @@ namespace ShaderToy.NET
     {
         public void ReloadFragmentShader(string shaderSource)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }

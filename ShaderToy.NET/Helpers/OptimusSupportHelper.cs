@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
-namespace ShaderToy.NET
+namespace ShaderToy.NET.Helpers
 {
-    class OptimusEnabler
+    class OptimusSupportHelper
     {
         //Import nVidia API to force nvOptimusRendering
         //see : http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf

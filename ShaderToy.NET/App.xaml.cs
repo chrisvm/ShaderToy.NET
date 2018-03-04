@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using ShaderToy.NET.Helpers;
 
 namespace ShaderToy.NET
 {
@@ -23,7 +18,7 @@ namespace ShaderToy.NET
             {
                 ///Ignore any System.EntryPointNotFoundException
                 ///or System.DllNotFoundException exceptions here
-                OptimusEnabler.NvAPI_Initialize_64();
+                OptimusSupportHelper.NvAPI_Initialize_64();
             }
             catch { }
 

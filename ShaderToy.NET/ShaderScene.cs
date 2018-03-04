@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Design;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-
-using GlmNet;
-
+using ShaderToy.NET.Helpers;
 using SharpGL;
 using SharpGL.Shaders;
-using SharpGL.SceneGraph.Core;
 using SharpGL.VertexBuffers;
 
 namespace ShaderToy.NET

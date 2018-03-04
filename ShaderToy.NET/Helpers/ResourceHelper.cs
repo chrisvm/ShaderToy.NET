@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
 
-namespace ShaderToy.NET
+namespace ShaderToy.NET.Helpers
 {
     static class ResourceHelper
     {

@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 
 using SharpGL;
-using SharpGL.SceneGraph.Primitives;
-using SharpGL.SceneGraph;
-using SharpGL.SceneGraph.Assets;
-
 using NAudio.Dsp;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace ShaderToy.NET
 {

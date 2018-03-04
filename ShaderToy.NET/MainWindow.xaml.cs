@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Drawing;
-
 using MahApps.Metro.Controls;
 
 using SharpGL;
-using SharpGL.SceneGraph.Primitives;
 using SharpGL.SceneGraph;
-using SharpGL.SceneGraph.Assets;
 using Microsoft.Win32;
 
 using NAudio.CoreAudioApi;
+using ShaderToy.NET.Helpers;
 
 namespace ShaderToy.NET
 {
@@ -157,7 +147,12 @@ namespace ShaderToy.NET
             shaderScene.ActiveShader = shaders[shaderSelector.SelectedIndex];
         }
 
-        private void Start_Mic(object sender, RoutedEventArgs e)
+	    private void TextureSelector_OnSelectionChanged_SelectedChanged(object sender, SelectionChangedEventArgs e)
+	    {
+		    throw new NotImplementedException();
+	    }
+
+		private void Start_Mic(object sender, RoutedEventArgs e)
         {
             mic.StartRecording();
             MicStop_Button.IsEnabled = true;
