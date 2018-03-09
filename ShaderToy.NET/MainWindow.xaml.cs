@@ -20,7 +20,7 @@ namespace ShaderToy.NET
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private readonly ShaderScene shaderScene;
+        private ShaderScene shaderScene;
         private readonly List<Shader> shaders = new List<Shader>();
 		private readonly List<string> textures = new List<string>(17);
         private readonly AudioPlayback aud = new AudioPlayback();
@@ -50,16 +50,29 @@ namespace ShaderToy.NET
 	        shaders.Add(new Shader("Music Ball", "music_ball_audio"));
 	        shaders.Add(new Shader("Cubescape", "cubescape_audio"));
 	        shaders.Add(new Shader("Sea", "sea"));
-	        shaders.Add(new Shader("Mandelbrot", "mandelbrot"));
 
-	        shaderScene = new ShaderScene(shaders[0]);
-			shaderSelector.ItemsSource = shaders;
-			shaderSelector.SelectedIndex = 0;
+	        shaders.Add(new Shader("Mandelbrot", "mandelbrot"));
+	        shaderSelector.ItemsSource = shaders;
+			
+			shaderScene = new ShaderScene();
+	        SetActiveShader(0);
 
 			InitTextures();
 
 			audioBitmap.OnBitmapUpdated += (s, a) => shaderScene.UpdateTextureBitmap(gl, 0, a.image);
-        }
+		}
+
+	    private void SetActiveShader(int index)
+	    {
+		    var shader = shaders[index];
+		    shaderSelector.SelectedIndex = index;
+		    if (string.IsNullOrEmpty(shader.Source)) {
+			    var resourceName = $"ShaderToy.NET.Shaders.{shader.ResourceName}.frag";
+				shader.Source = ResourceHelper.LoadTextFromRecource(resourceName);
+			}
+		    shaderSource.Text = shader.Source;
+			shaderScene.ActiveShader = shader;
+		}
 
 	    private void InitTextures()
 	    {
@@ -86,7 +99,8 @@ namespace ShaderToy.NET
             // init channel 0 (image)
 	        if (updateImageAfterGlLoad) {
 				shaderScene.UpdateTextureBitmap(gl, 1, ImageHelper.BitmapImage2Bitmap(Ch0Image));
-			}
+		        updateImageAfterGlLoad = false;
+	        }
         }
 
         private void UpdateChannel0(string uriOfImage)
@@ -170,7 +184,7 @@ namespace ShaderToy.NET
 
         private void Shader_SelectedChanged(object sender, SelectionChangedEventArgs e)
         {
-            shaderScene.ActiveShader = shaders[shaderSelector.SelectedIndex];
+	        SetActiveShader(shaderSelector.SelectedIndex);
         }
 
 	    private void TextureSelector_OnSelectionChanged_SelectedChanged(object sender, SelectionChangedEventArgs e)

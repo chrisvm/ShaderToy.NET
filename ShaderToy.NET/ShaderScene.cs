@@ -5,84 +5,76 @@ using ShaderToy.NET.Helpers;
 using SharpGL;
 using SharpGL.Shaders;
 using SharpGL.VertexBuffers;
+using static System.DateTime;
 
 namespace ShaderToy.NET
 {
     public class ShaderScene
     {
         //  Constants that specify the attribute indexes.
-        const uint attributeIndexPosition = 0;
+	    private const uint AttributeIndexPosition = 0;
 
         //Texture Names Array
-        private uint[] glTextureArray = new uint[2] { 0 , 0 };
+        private readonly uint[] _glTextureArray = { 0 , 0 };
 
-        float resolutionX;
-        float resolutionY;
+	    private float _resolutionX;
+	    private float _resolutionY;
 
-        float time;
+	    private float _time;
 
         //  The vertex buffer array which contains the vertex and texture coords buffers.
-        VertexBufferArray vertexBufferArray;
-        VertexBufferArray texCoordsBufferArray;
+	    private VertexBufferArray _vertexBufferArray;
 
-        private bool needsRefresh = true;
+	    private VertexBufferArray _texCoordsBufferArray;
 
-        private Shader ashader;
+        private bool _needsRefresh = true;
+
+        private Shader _ashader;
         public Shader ActiveShader
         {
             get
             {
-                return ashader;
+                return _ashader;
             }
             set
             {
-                ashader = value;
-                needsRefresh = true;
+                _ashader = value;
+                _needsRefresh = true;
             }
         }
 
         //  The shader program for our vertex and fragment shader.
-        private ShaderProgram shaderProgram;
-
-
-        public ShaderScene(Shader shader)
-        {
-            this.ashader = shader;
-        }
-
-        /// <summary>
+        private ShaderProgram _shaderProgram;
+		
+		/// <summary>
         /// Initialises the scene.
         /// </summary>
         /// <param name="gl">The OpenGL instance.</param>
         public void Initialise(OpenGL gl)
         {
-            time = DateTime.Now.Millisecond / 1000;
-            //  Set a blue clear colour.
-            //gl.ClearColor(0.4f, 0.6f, 0.9f, 0.0f);
+            _time = Now.Millisecond / 1000;
 
             //  Create the shader program.
             var vertexShaderSource = ResourceHelper.LoadTextFromRecource("ShaderToy.NET.Shaders.main.vert");
-            var fragmentShaderSource = ResourceHelper.LoadTextFromRecource(
-	            $"ShaderToy.NET.Shaders.{ActiveShader.ResourceName}.frag");
-            shaderProgram = new DynamicShaderProgram();
-            shaderProgram.Create(gl, vertexShaderSource, fragmentShaderSource, null);
+            _shaderProgram = new DynamicShaderProgram();
+            _shaderProgram.Create(gl, vertexShaderSource, ActiveShader.Source, null);
 
-            shaderProgram.BindAttributeLocation(gl, attributeIndexPosition, "position");
-            shaderProgram.AssertValid(gl);
+            _shaderProgram.BindAttributeLocation(gl, AttributeIndexPosition, "position");
+            _shaderProgram.AssertValid(gl);
 
             //Generate Textures
-            gl.GenTextures(2, glTextureArray);
+            gl.GenTextures(2, _glTextureArray);
             //shaderProgram.BindAttributeLocation(gl, glTextureArray[0], "iChannel0");
             //shaderProgram.BindAttributeLocation(gl, glTextureArray[1], "iChannel1");
-            var ch0loc = shaderProgram.GetUniformLocation(gl, "iChannel0");
+            var ch0Loc = _shaderProgram.GetUniformLocation(gl, "iChannel0");
             gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[0]);
-            gl.Uniform1(ch0loc, 0);
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
+            gl.Uniform1(ch0Loc, 0);
 
-            var ch1loc = shaderProgram.GetUniformLocation(gl, "iChannel1");
+            var ch1Loc = _shaderProgram.GetUniformLocation(gl, "iChannel1");
             gl.ActiveTexture(OpenGL.GL_TEXTURE1);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[1]);
-            gl.Uniform1(ch1loc, 1);
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
+            gl.Uniform1(ch1Loc, 1);
 
             /*gl.ActiveTexture(OpenGL.GL_TEXTURE0);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[0]);
@@ -92,66 +84,68 @@ namespace ShaderToy.NET
             //  Now create the geometry for the square.
             CreateVerticesForSquare(gl);
 
-            needsRefresh = false;
+            _needsRefresh = false;
         }
 
-        /// <summary>
-        /// Draws the scene.
-        /// </summary>
-        /// <param name="gl">The OpenGL instance.</param>
-        public void Draw(OpenGL gl, float width, float height)
+	    /// <summary>
+	    /// Draws the scene.
+	    /// </summary>
+	    /// <param name="gl">The OpenGL instance.</param>
+	    /// <param name="width"></param>
+	    /// <param name="height"></param>
+	    public void Draw(OpenGL gl, float width, float height)
         {
-            if (needsRefresh) Initialise(gl);
+            if (_needsRefresh) Initialise(gl);
 
-            resolutionX = width;
-            resolutionY = height;
+            _resolutionX = width;
+            _resolutionY = height;
 
             //  Clear the scene.
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 
             //  Bind the shader, set the matrices.
-            shaderProgram.Bind(gl);
+            _shaderProgram.Bind(gl);
 
-            shaderProgram.SetUniform3(gl, "iResolution", resolutionX, resolutionY, 0.0f);
-            shaderProgram.SetUniform1(gl, "iGlobalTime", time);
+            _shaderProgram.SetUniform3(gl, "iResolution", _resolutionX, _resolutionY, 0.0f);
+            _shaderProgram.SetUniform1(gl, "iGlobalTime", _time);
             
-            time += 0.1f;
+            _time += 0.1f;
 
             //  Bind the out vertex array.
-            vertexBufferArray.Bind(gl);
-            texCoordsBufferArray.Bind(gl);
+            _vertexBufferArray.Bind(gl);
+            _texCoordsBufferArray.Bind(gl);
 
             //Bind Textures
-            var ch0loc = shaderProgram.GetUniformLocation(gl, "iChannel0");
+            var ch0Loc = _shaderProgram.GetUniformLocation(gl, "iChannel0");
             gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[0]);
-            gl.Uniform1(ch0loc, 0);
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[0]);
+            gl.Uniform1(ch0Loc, 0);
 
-            var ch1loc = shaderProgram.GetUniformLocation(gl, "iChannel1");
+            var ch1Loc = _shaderProgram.GetUniformLocation(gl, "iChannel1");
             gl.ActiveTexture(OpenGL.GL_TEXTURE1);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[1]);
-            gl.Uniform1(ch1loc, 1);
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[1]);
+            gl.Uniform1(ch1Loc, 1);
 
             //  Draw the square.
             gl.DrawArrays(OpenGL.GL_TRIANGLES, 0, 6);
 
             //  Unbind our vertex array and shader.
-            vertexBufferArray.Unbind(gl);
-            texCoordsBufferArray.Unbind(gl);
+            _vertexBufferArray.Unbind(gl);
+            _texCoordsBufferArray.Unbind(gl);
 
 
-            shaderProgram.Unbind(gl);
+            _shaderProgram.Unbind(gl);
         }
 
         /// <summary>
         /// The width of the texture images.
         /// </summary>
-        private int[] width = new int[2] { 0, 0 };
+        private readonly int[] _width = { 0, 0 };
 
         /// <summary>
         /// The height of the texture images.
         /// </summary>
-        private int[] height = new int[2] { 0, 0 };
+        private readonly int[] _height = { 0, 0 };
 
         /// <summary>
         /// updates pixel data of the desired texture.
@@ -209,20 +203,17 @@ namespace ShaderToy.NET
                 ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             //	Set the width and height.
-            width[texIndex] = image.Width;
-            height[texIndex] = image.Height;
+            _width[texIndex] = image.Width;
+            _height[texIndex] = image.Height;
 
-            if(texIndex == 0)
-            gl.ActiveTexture(OpenGL.GL_TEXTURE0);
-            else
-            gl.ActiveTexture(OpenGL.GL_TEXTURE1);
+	        gl.ActiveTexture(texIndex == 0 ? OpenGL.GL_TEXTURE0 : OpenGL.GL_TEXTURE1);
 
-            //	Bind our texture object (make it the current texture).
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, glTextureArray[texIndex]);
+	        //	Bind our texture object (make it the current texture).
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _glTextureArray[texIndex]);
 
             //  Set the image data.
             gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA,
-                width[texIndex], height[texIndex], 0, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE,
+                _width[texIndex], _height[texIndex], 0, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE,
                 bitmapData.Scan0);
 
             //  Unlock the image.
@@ -234,7 +225,6 @@ namespace ShaderToy.NET
             //  Set linear filtering mode.
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
-
         }
 
 
@@ -261,13 +251,13 @@ namespace ShaderToy.NET
             texcoords[10] = 1.0f; texcoords[11] = 1.0f;
 
             //  Create the vertex array object.
-            vertexBufferArray = new VertexBufferArray();
-            vertexBufferArray.Create(gl);
-            vertexBufferArray.Bind(gl);
+            _vertexBufferArray = new VertexBufferArray();
+            _vertexBufferArray.Create(gl);
+            _vertexBufferArray.Bind(gl);
 
-            texCoordsBufferArray = new VertexBufferArray();
-            texCoordsBufferArray.Create(gl);
-            texCoordsBufferArray.Bind(gl);
+            _texCoordsBufferArray = new VertexBufferArray();
+            _texCoordsBufferArray.Create(gl);
+            _texCoordsBufferArray.Bind(gl);
 
 
             //  Create a vertex buffer for the vertex data.
@@ -288,9 +278,8 @@ namespace ShaderToy.NET
             colourDataBuffer.SetData(gl, 1, colors, false, 3);*/
 
             //  Unbind the vertex array, we've finished specifying data for it.
-            vertexBufferArray.Unbind(gl);
-            texCoordsBufferArray.Unbind(gl);
+            _vertexBufferArray.Unbind(gl);
+            _texCoordsBufferArray.Unbind(gl);
         }
-
     }
 }
